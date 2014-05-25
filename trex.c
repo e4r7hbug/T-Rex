@@ -111,7 +111,8 @@ static void trex_error(TRex *exp,const TRexChar *error)
 	longjmp(*((jmp_buf*)exp->_jmpbuf),-1);
 }
 
-static void trex_expect(TRex *exp, int n){
+static void trex_expect(TRex *exp, int n)
+{
 	if((*exp->_p) != n) {
 		trex_error(exp, _SC("expected paren"));
 	}
@@ -121,7 +122,7 @@ static void trex_expect(TRex *exp, int n){
 
 static TRexChar trex_escapechar(TRex *exp)
 {
-	if(*exp->_p == TREX_SYMBOL_ESCAPE_CHAR){
+	if(*exp->_p == TREX_SYMBOL_ESCAPE_CHAR) {
 		exp->_p++;
 		switch(*exp->_p) {
 			case 'v': {exp->_p++; return '\v';}
@@ -149,8 +150,10 @@ static int trex_charclass(TRex *exp,int classid)
 static int trex_charnode(TRex *exp,TRexBool isclass)
 {
 	TRexChar t;
+
 	if(*exp->_p == TREX_SYMBOL_ESCAPE_CHAR) {
 		exp->_p++;
+
 		switch(*exp->_p) {
 			case 'n': {exp->_p++; return trex_newnode(exp,'\n');}
 			case 't': {exp->_p++; return trex_newnode(exp,'\t');}
@@ -159,23 +162,24 @@ static int trex_charnode(TRex *exp,TRexBool isclass)
 			case 'v': {exp->_p++; return trex_newnode(exp,'\v');}
 			case 'a': case 'A': case 'w': case 'W': case 's': case 'S':
 			case 'd': case 'D': case 'x': case 'X': case 'c': case 'C':
-			case 'p': case 'P': case 'l': case 'u':
-				{
-					t = *exp->_p; exp->_p++;
-					return trex_charclass(exp,t);
-				}
+			case 'p': case 'P': case 'l': case 'u': {
+				t = *exp->_p; exp->_p++;
+				return trex_charclass(exp,t);
+			} // end case aAwWsSdDxXcCpPlu
 			case 'b':
-			case 'B':
+			case 'B': {
 				if(!isclass) {
 					int node = trex_newnode(exp,OP_WB);
 					exp->_nodes[node].left = *exp->_p;
 					exp->_p++;
 					return node;
 				} //else default
-			default:
+			} // end case bB
+			default: {
 				t = *exp->_p; exp->_p++;
 				return trex_newnode(exp,t);
-		}
+			}
+		} // end switch
 	}
 	else if(!scisprint(*exp->_p)) {
 		trex_error(exp,_SC("letter expected"));
@@ -190,7 +194,7 @@ static int trex_class(TRex *exp)
 	int ret = -1;
 	int first = -1,chain;
 
-	if(*exp->_p == TREX_SYMBOL_BEGINNING_OF_STRING){
+	if(*exp->_p == TREX_SYMBOL_BEGINNING_OF_STRING) {
 		ret = trex_newnode(exp,OP_NCLASS);
 		exp->_p++;
 	}
@@ -205,7 +209,7 @@ static int trex_class(TRex *exp)
 	chain = ret;
 
 	while(*exp->_p != ']' && exp->_p != exp->_eol) {
-		if(*exp->_p == '-' && first != -1){
+		if(*exp->_p == '-' && first != -1) {
 			int r,t;
 
 			if(*exp->_p++ == ']') {
@@ -229,20 +233,20 @@ static int trex_class(TRex *exp)
 			chain = r;
 			first = -1;
 		}
-		else{
-			if(first!=-1){
+		else {
+			if(first!=-1) {
 				int c = first;
 				exp->_nodes[chain].next = c;
 				chain = c;
 				first = trex_charnode(exp,TRex_True);
 			}
-			else{
+			else {
 				first = trex_charnode(exp,TRex_True);
 			}
 		}
 	} // end while
 
-	if(first!=-1){
+	if(first!=-1) {
 		int c = first;
 		exp->_nodes[chain].next = c;
 		chain = c;
@@ -361,7 +365,7 @@ static int trex_element(TRex *exp)
 					exp->_p++;
 					p1 = 0xFFFF;
 
-					if(isdigit(*exp->_p)){
+					if(isdigit(*exp->_p)) {
 						p1 = (unsigned short)trex_parsenumber(exp);
 					}
 
@@ -583,7 +587,7 @@ static const TRexChar *trex_matchnode(TRex* exp,TRexNode *node,const TRexChar *s
 				}
 
 				if(!(cur = trex_matchnode(exp,n,cur,subnext))) {
-					if(capture != -1){
+					if(capture != -1) {
 						exp->_matches[capture].begin = 0;
 						exp->_matches[capture].len = 0;
 					}
@@ -642,7 +646,7 @@ static const TRexChar *trex_matchnode(TRex* exp,TRexNode *node,const TRexChar *s
 			*str++;
 			return str;
 		} // end case default
-	} // end of switch
+	} // end switch
 
 	return NULL;
 }

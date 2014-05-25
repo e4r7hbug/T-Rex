@@ -16,28 +16,32 @@ int main(int argc, char* argv[])
 	TRexChar sTemp[200];
 	const TRexChar *error = NULL;
 	TRex *x = trex_compile(_TREXC("<a href=[\"|'](.*)[\"|']>(.*)</a>"),&error);
+
 	if(x) {
 		trex_sprintf(sTemp,_TREXC("<html><head></head><body><a href='link.html'>link</a></body></html>"));
-		if(trex_search(x,sTemp,&begin,&end))
-		{
+
+		if(trex_search(x,sTemp,&begin,&end)) {
 			int i,n = trex_getsubexpcount(x);
 			TRexMatch match;
-			for(i = 0; i < n; i++)
-			{
+
+			for(i = 0; i < n; i++) {
 				TRexChar t[200];
 				trex_getsubexp(x,i,&match);
 				trex_sprintf(t,_TREXC("[%%d]%%.%ds\n"),match.len);
 				trex_printf(t,i,match.begin);
 			}
+
 			trex_printf(_TREXC("match! %d sub matches\n"),trex_getsubexpcount(x));
 		}
 		else {
 			trex_printf(_TREXC("no match!\n"));
 		}
+
 		trex_free(x);
 	}
 	else {
 		trex_printf(_TREXC("compilation error [%s]!\n"),error?error:_TREXC("undefined"));
 	}
+
 	return 0;
 }

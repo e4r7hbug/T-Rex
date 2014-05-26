@@ -1,6 +1,7 @@
 ===version 1.4
 -fixed tabulation
 -added {} for clarity
+-fixed Issue #1 where trex_match would always return TRex_False
 
 ===version 1.3
 -fixed a bug for GCC users(thx Brendan)

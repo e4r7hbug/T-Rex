@@ -675,26 +675,24 @@ TRex *trex_compile(const TRexChar *pattern,const TRexChar **error)
 		}
 
 		#ifdef _DEBUG
-			{
-				int nsize,i;
-				TRexNode *t;
-				nsize = exp->_nsize;
-				t = &exp->_nodes[0];
-				scprintf(_SC("\n"));
+			int nsize,i;
+			TRexNode *t;
+			nsize = exp->_nsize;
+			t = &exp->_nodes[0];
+			scprintf(_SC("\n"));
 
-				for(i = 0;i < nsize; i++) {
-					if(exp->_nodes[i].type>MAX_CHAR) {
-						scprintf(_SC("[%02d] %10s "),i,g_nnames[exp->_nodes[i].type-MAX_CHAR]);
-					}
-					else {
-						scprintf(_SC("[%02d] %10c "),i,exp->_nodes[i].type);
-					}
-
-					scprintf(_SC("left %02d right %02d next %02d\n"),exp->_nodes[i].left,exp->_nodes[i].right,exp->_nodes[i].next);
+			for(i = 0;i < nsize; i++) {
+				if(exp->_nodes[i].type>MAX_CHAR) {
+					scprintf(_SC("[%02d] %10s "),i,g_nnames[exp->_nodes[i].type-MAX_CHAR]);
+				}
+				else {
+					scprintf(_SC("[%02d] %10c "),i,exp->_nodes[i].type);
 				}
 
-				scprintf(_SC("\n"));
+				scprintf(_SC("left %02d right %02d next %02d\n"),exp->_nodes[i].left,exp->_nodes[i].right,exp->_nodes[i].next);
 			}
+
+			scprintf(_SC("\n"));
 		#endif
 
 		exp->_matches = (TRexMatch *) malloc(exp->_nsubexpr * sizeof(TRexMatch));

@@ -108,6 +108,10 @@ int main(int argc, char* argv[])
 	trex_printf("Test 5: single character\n");
 	trex_sprintf(regex_str, _TREXC("."));
 	trex_test(regex_str, test_string, TRex_True);
+
+	trex_printf("Test 6: optional letter\n");
+	trex_sprintf(regex_str, _TREXC("st?ome"));
+	trex_test(regex_str, test_string, TRex_True);
 	// End negative testing
 
 	return 0;
